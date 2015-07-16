@@ -9,6 +9,8 @@ let {
   TextInput,
   TouchableHighlight,
   ActivityIndicatorIOS,
+  NetInfo,
+  AsyncStorage,
 } = React;
 
 var styles = StyleSheet.create({
@@ -62,8 +64,26 @@ class Main extends React.Component {
     this.state = {
       fullname: '',
       isLoading: false,
-      error: false
+      error: false,
+      isConnected: null
     };
+  }
+
+  componentDidMount() {
+    this.boundedHandleConnectivityChange = this.handleConnectivityChange.bind(this);
+    NetInfo.isConnected.addEventListener('change', this.boundedHandleConnectivityChange);
+
+    NetInfo.isConnected.fetch().done(isConnected => {
+      this.setState({ isConnected });
+    });
+  }
+
+  componentWillUnmount() {
+    NetInfo.isConnected.removeEventListener('change', this.boundedHandleConnectivityChange);
+  }
+
+  handleConnectivityChange(isConnected) {
+    this.setState({ isConnected });
   }
 
   handleChange(event) {
@@ -72,10 +92,79 @@ class Main extends React.Component {
     });
   }
 
+  goToProfile(profile) {
+    AsyncStorage
+      .setItem('@MobileBusinessCard:' + this.state.fullname, JSON.stringify(profile))
+      .done();
+
+    this.setState({
+      fullname: '',
+      isLoading: false,
+      error: false
+    });
+
+    this.props.navigator.push({
+      title: profile.formattedName,
+      component: Dashboard,
+      passProps: {
+        userInfo: profile
+      }
+    });
+  }
+
   handleSubmit(event) {
     this.setState({
       isLoading: true
     });
+
+    if ('_CC_' === this.state.fullname) {
+      AsyncStorage
+        .getAllKeys()
+        .then(keys => {
+          if (keys) {
+            keys.filter(key => 0 === key.indexOf('@MobileBusinessCard:'));
+          }
+
+          return keys;
+        })
+        .then(keys => {
+          if (keys) {
+            AsyncStorage.multiRemove(keys).done();
+          }
+        })
+        .done();
+
+      this.setState({
+        error: 'Cache cleared',
+        isLoading: false
+      });
+
+      return;
+    }
+
+    if (!this.state.isConnected) {
+      AsyncStorage
+        .getItem('@MobileBusinessCard:' + this.state.fullname)
+        .then(value => {
+          if (value) {
+            return this.goToProfile(JSON.parse(value));
+          }
+
+          this.setState({
+            error: 'User not found',
+            isLoading: false
+          });
+        })
+        .catch(error => {
+          this.setState({
+            error: 'AsyncStorage error: ' + error.message,
+            isLoading: false
+          });
+        })
+        .done();
+
+      return;
+    }
 
     api.getProfile().then(res => {
       if ('j' !== this.state.fullname) {
@@ -87,19 +176,7 @@ class Main extends React.Component {
         return;
       }
 
-      this.props.navigator.push({
-        title: res.formattedName,
-        component: Dashboard,
-        passProps: {
-          userInfo: res
-        }
-      });
-
-      this.setState({
-        fullname: '',
-        isLoading: false,
-        error: false
-      });
+      this.goToProfile(res);
     });
   }
 
@@ -111,7 +188,7 @@ class Main extends React.Component {
         <Text style={styles.title}>Search for a LinkedIn User</Text>
         <TextInput
           style={styles.searchInput}
-          value={this.state.username}
+          value={this.state.fullname}
           onChange={this.handleChange.bind(this)}
         />
         <TouchableHighlight
