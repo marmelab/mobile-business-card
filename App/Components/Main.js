@@ -1,4 +1,7 @@
 let React = require('react-native');
+let api = require('../Utils/api');
+let Dashboard = require('./Dashboard');
+
 let {
   View,
   Text,
@@ -15,7 +18,7 @@ var styles = StyleSheet.create({
     marginTop: 65,
     flexDirection: 'column',
     justifyContent: 'center',
-    backgroundColor: '#48BBEC',
+    backgroundColor: '#48BBEC'
   },
   title: {
     marginBottom: 20,
@@ -60,7 +63,7 @@ class Main extends React.Component {
       fullname: '',
       isLoading: false,
       error: false
-    }
+    };
   }
 
   handleChange(event) {
@@ -73,10 +76,36 @@ class Main extends React.Component {
     this.setState({
       isLoading: true
     });
-    console.log('Submit', this.state.fullname);
+
+    api.getProfile().then(res => {
+      if ('j' !== this.state.fullname) {
+        this.setState({
+          error: 'User not found',
+          isLoading: false
+        });
+
+        return;
+      }
+
+      this.props.navigator.push({
+        title: res.formattedName,
+        component: Dashboard,
+        passProps: {
+          userInfo: res
+        }
+      });
+
+      this.setState({
+        fullname: '',
+        isLoading: false,
+        error: false
+      });
+    });
   }
 
   render() {
+    let showError = this.state.error ? <Text>{this.state.error}</Text> : null;
+
     return (
       <View style={styles.mainContainer}>
         <Text style={styles.title}>Search for a LinkedIn User</Text>
@@ -91,6 +120,12 @@ class Main extends React.Component {
           underlayColor="white">
             <Text style={styles.buttonText}>SEARCH</Text>
         </TouchableHighlight>
+        <ActivityIndicatorIOS
+          animating={this.state.isLoading}
+          color="#111"
+          size="large"
+        />
+        {showError}
       </View>
     );
   }
