@@ -9,22 +9,22 @@ let Main = require('./App/Components/Main');
 var styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#111111',
-  },
+    backgroundColor: '#111111'
+  }
 });
 
-class LinkedInRequester extends React.Component {
+class MobileBusinessCard extends React.Component {
   render() {
     return (
       <NavigatorIOS
         style={styles.container}
         initialRoute={{
-          title: 'LinkedIn Requester',
-          component: Main,
+          title: 'Mobile Business Card',
+          component: Main
         }}
       />
     );
   }
 }
 
-AppRegistry.registerComponent('LinkedInRequester', () => LinkedInRequester);
+AppRegistry.registerComponent('MobileBusinessCard', () => MobileBusinessCard);

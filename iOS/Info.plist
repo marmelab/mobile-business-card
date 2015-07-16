@@ -24,10 +24,10 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.marmelab.linkedinrequester</string>
+			<string>com.marmelab.mobilebusinesscard</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>linkedinrequester</string>
+				<string>mobilebusinesscard</string>
 			</array>
 		</dict>
 	</array>
