@@ -1,0 +1,16 @@
+[
+    {
+        "name": "François Zaninotto",
+        "avatar": "https://s.gravatar.com/avatar/8ad62a25686796c42fedbe3ddedce1f1?s=350",
+        "headline": "CEO of Marmelab",
+        "location": "Nancy, France",
+        "email": "francois@marmelab.com"
+    },
+    {
+        "name": "Jérôme Macias",
+        "avatar": "https://s.gravatar.com/avatar/c60985142ae0ed3d74d311ee48b5243d?s=350",
+        "headline": "Full-Stack Agile Web Developer at Marmelab",
+        "location": "Paris, France",
+        "email": "jerome@marmelab.com"
+    }
+]

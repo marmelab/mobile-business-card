@@ -166,18 +166,16 @@ class Main extends React.Component {
       return;
     }
 
-    api.getProfile().then(res => {
-      if ('j' !== this.state.fullname) {
+    api.getProfile(this.state.fullname)
+      .then(profile => {
+        this.goToProfile(profile);
+      })
+      .catch(error => {
         this.setState({
-          error: 'User not found',
+          error: error.message,
           isLoading: false
         });
-
-        return;
-      }
-
-      this.goToProfile(res);
-    });
+      });
   }
 
   render() {

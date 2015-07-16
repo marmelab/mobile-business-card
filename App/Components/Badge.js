@@ -39,10 +39,10 @@ class Badge extends React.Component {
     return (
       <View style={styles.container}>
         <Image
-          source={{ uri: this.props.userInfo.pictureUrls.values[0] }}
+          source={{ uri: this.props.userInfo.avatar }}
           style={styles.image}
         />
-        <Text style={styles.name}>{this.props.userInfo.formattedName}</Text>
+        <Text style={styles.name}>{this.props.userInfo.name}</Text>
         <Text style={styles.headline}>{this.props.userInfo.headline}</Text>
       </View>
     );

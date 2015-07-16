@@ -33,19 +33,15 @@ let styles = StyleSheet.create({
 class Profile extends React.Component {
   render() {
     let userInfo = this.props.userInfo;
-    let topics = ['location', 'numConnections', 'industry', 'summary', 'emailAddress'];
+    let topics = ['location', 'summary', 'email'];
     let list = topics.map((item, index) => {
       let content = userInfo[item];
       if (!content) {
         return null;
       }
 
-      if ('location' === item) {
-        content = content.name;
-      }
-
       return (
-        <View key={ index }>
+        <View key={index}>
           <View style={styles.rowContainer}>
             <Text style={styles.rowTitle}>{ item[0].toUpperCase() + item.slice(1) }</Text>
             <Text style={styles.rowContent}>{ content }</Text>

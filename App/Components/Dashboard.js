@@ -49,7 +49,7 @@ class Dashboard extends React.Component {
     return (
       <View style={styles.container}>
         <Image
-          source={{ uri: this.props.userInfo.pictureUrls.values[0] }}
+          source={{ uri: this.props.userInfo.avatar }}
           style={styles.image}
         />
         <TouchableHighlight
